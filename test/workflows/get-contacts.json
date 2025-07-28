@@ -1,0 +1,35 @@
+{
+  "name": "Get Chatwoot Contacts",
+  "nodes": [
+    {
+      "parameters": {
+        "resource": "contact",
+        "operation": "getAll",
+        "accountId": 1,
+        "returnAll": false,
+        "limit": 10,
+        "sort": "name"
+      },
+      "id": "chatwoot-get-contacts",
+      "name": "Get Contacts",
+      "type": "@pixelinfinito/n8n-nodes-chatwoot.chatwoot",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "credentials": {
+        "chatwootApi": {
+          "id": "chatwoot-credentials",
+          "name": "Chatwoot API"
+        }
+      }
+    }
+  ],
+  "connections": {},
+  "active": false,
+  "settings": {},
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "chatwoot-get-contacts-workflow",
+  "tags": []
+}

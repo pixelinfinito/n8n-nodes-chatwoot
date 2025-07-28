@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;">
+    <g id="on_white" transform="matrix(0.999315,0,0,1,0,0)">
+        <g id="Logo">
+            <g id="on_white1" serif:id="on_white">
+                <g id="woot-log">
+                    <circle id="Oval" cx="256" cy="256" r="256" style="fill:rgb(71,167,246);"/>
+                    <path id="Fill-1" d="M362.808,368.808L244.123,368.808C178.699,368.808 125.457,315.562 125.457,250.122C125.457,184.703 178.699,131.457 244.124,131.457C309.565,131.457 362.808,184.703 362.808,250.122L362.808,368.808Z" style="fill:white;fill-rule:nonzero;stroke:white;stroke-width:6px;"/>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

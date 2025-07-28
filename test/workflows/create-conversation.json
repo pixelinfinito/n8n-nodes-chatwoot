@@ -1,0 +1,40 @@
+{
+  "name": "Create Chatwoot Conversation",
+  "nodes": [
+    {
+      "parameters": {
+        "resource": "conversation",
+        "operation": "create",
+        "accountId": 1,
+        "sourceId": "ch-123-xyz",
+        "inboxId": 1,
+        "additionalFields": {
+          "fields": {
+            "status": "open",
+            "message": "Hello! How can I help you today?"
+          }
+        }
+      },
+      "id": "chatwoot-create-conversation",
+      "name": "Create Conversation",
+      "type": "@pixelinfinito/n8n-nodes-chatwoot.chatwoot",
+      "typeVersion": 1,
+      "position": [240, 300],
+      "credentials": {
+        "chatwootApi": {
+          "id": "chatwoot-credentials",
+          "name": "Chatwoot API"
+        }
+      }
+    }
+  ],
+  "connections": {},
+  "active": false,
+  "settings": {},
+  "versionId": "1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "chatwoot-create-conversation-workflow",
+  "tags": []
+}
