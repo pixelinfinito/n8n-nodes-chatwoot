@@ -515,6 +515,61 @@ export class Chatwoot implements INodeType {
 					},
 				},
 			},
+			// Send mode for conversation creation
+			{
+				displayName: 'Send',
+				name: 'sendMode',
+				type: 'options',
+				options: [
+					{
+						name: 'Structured Fields',
+						value: 'fields',
+						description: 'Use the structured form fields below',
+					},
+					{
+						name: 'Custom JSON',
+						value: 'json',
+						description: 'Provide custom JSON for full control over the request',
+					},
+				],
+				default: 'fields',
+				description: 'How to send the data',
+				displayOptions: {
+					show: {
+						resource: ['conversation'],
+						operation: ['create'],
+					},
+				},
+			},
+			{
+				displayName: 'Custom JSON',
+				name: 'customJson',
+				type: 'json',
+				default: `{
+  "source_id": "1234567890",
+  "inbox_id": 1,
+  "contact_id": 1,
+  "message": {
+    "content": "Hello, how can I help you?",
+    "template_params": {
+      "name": "sample_issue_resolution",
+      "category": "UTILITY",
+      "language": "en_US",
+      "processed_params": {
+        "1": "Chatwoot"
+      }
+    }
+  }
+}`,
+				description: 'Custom JSON payload to send with the request. This will override all structured fields.',
+				displayOptions: {
+					show: {
+						resource: ['conversation'],
+						operation: ['create'],
+						sendMode: ['json'],
+					},
+				},
+			},
 			{
 				displayName: 'Source ID',
 				name: 'sourceId',
@@ -527,6 +582,7 @@ export class Chatwoot implements INodeType {
 					show: {
 						resource: ['conversation'],
 						operation: ['create'],
+						sendMode: ['fields'],
 					},
 				},
 			},
@@ -542,67 +598,157 @@ export class Chatwoot implements INodeType {
 					show: {
 						resource: ['conversation'],
 						operation: ['create'],
+						sendMode: ['fields'],
 					},
 				},
 			},
 			{
-				displayName: 'Contact ID',
-				name: 'contactId',
-				type: 'number',
-				default: '',
-				description: 'The ID of an existing contact',
-				placeholder: '1',
-				displayOptions: {
-					show: {
-						resource: ['conversation'],
-						operation: ['create'],
-					},
-				},
-			},
-			{
-				displayName: 'Assignee ID',
-				name: 'assigneeId',
-				type: 'number',
-				default: '',
-				description: 'ID of the agent to assign the conversation to',
-				placeholder: '1',
-				displayOptions: {
-					show: {
-						resource: ['conversation'],
-						operation: ['create'],
-					},
-				},
-			},
-			{
-				displayName: 'Team ID',
-				name: 'teamId',
-				type: 'number',
-				default: '',
-				description: 'ID of the team to assign the conversation to',
-				placeholder: '1',
-				displayOptions: {
-					show: {
-						resource: ['conversation'],
-						operation: ['create'],
-					},
-				},
-			},
-			{
-				displayName: 'Initial Message',
+				displayName: 'Initial Message Content',
 				name: 'initialMessage',
 				type: 'string',
 				typeOptions: {
 					rows: 3,
 				},
 				default: '',
+				required: true,
 				description: 'Content of the initial message',
 				placeholder: 'Hello! How can I help you?',
 				displayOptions: {
 					show: {
 						resource: ['conversation'],
 						operation: ['create'],
+						sendMode: ['fields'],
 					},
 				},
+			},
+			{
+				displayName: 'Additional Options',
+				name: 'additionalOptions',
+				type: 'collection',
+				placeholder: 'Add Option',
+				default: {},
+				displayOptions: {
+					show: {
+						resource: ['conversation'],
+						operation: ['create'],
+						sendMode: ['fields'],
+					},
+				},
+				options: [
+					{
+						displayName: 'Contact ID',
+						name: 'contactId',
+						type: 'number',
+						default: '',
+						description: 'The ID of an existing contact',
+						placeholder: '1',
+					},
+					{
+						displayName: 'Assignee ID',
+						name: 'assigneeId',
+						type: 'number',
+						default: '',
+						description: 'ID of the agent to assign the conversation to',
+						placeholder: '1',
+					},
+					{
+						displayName: 'Team ID',
+						name: 'teamId',
+						type: 'number',
+						default: '',
+						description: 'ID of the team to assign the conversation to',
+						placeholder: '1',
+					},
+					{
+						displayName: 'Status',
+						name: 'status',
+						type: 'options',
+						options: [
+							{ name: 'Open', value: 'open' },
+							{ name: 'Resolved', value: 'resolved' },
+							{ name: 'Pending', value: 'pending' },
+						],
+						default: 'open',
+						description: 'Status of the conversation',
+					},
+					{
+						displayName: 'Snoozed Until',
+						name: 'snoozedUntil',
+						type: 'dateTime',
+						default: '',
+						description: 'Snoozed until date time',
+					},
+					{
+						displayName: 'Additional Attributes',
+						name: 'additionalAttributes',
+						type: 'json',
+						default: '{}',
+						description: 'Additional attributes like browser information (JSON format)',
+						placeholder: '{"browser": "Chrome", "browser_version": "89.0.4389.82"}',
+					},
+					{
+						displayName: 'Custom Attributes',
+						name: 'customAttributes',
+						type: 'json',
+						default: '{}',
+						description: 'Custom attributes for the conversation (JSON format)',
+						placeholder: '{"attribute_key": "attribute_value", "priority": 3}',
+					},
+					{
+						displayName: 'WhatsApp Template Parameters',
+						name: 'templateParams',
+						type: 'fixedCollection',
+						typeOptions: {
+							multipleValues: false,
+						},
+						description: 'Template parameters for WhatsApp messages',
+						default: {},
+						options: [
+							{
+								name: 'template',
+								displayName: 'Template',
+								values: [
+									{
+										displayName: 'Template Name',
+										name: 'name',
+										type: 'string',
+										default: '',
+										description: 'Name of the WhatsApp template',
+										placeholder: 'sample_issue_resolution',
+									},
+									{
+										displayName: 'Category',
+										name: 'category',
+										type: 'options',
+										options: [
+											{ name: 'UTILITY', value: 'UTILITY' },
+											{ name: 'MARKETING', value: 'MARKETING' },
+											{ name: 'AUTHENTICATION', value: 'AUTHENTICATION' },
+										],
+										default: 'UTILITY',
+										description: 'Category of the template',
+									},
+									{
+										displayName: 'Language',
+										name: 'language',
+										type: 'string',
+										default: 'en_US',
+										description: 'Language code for the template',
+										placeholder: 'en_US',
+									},
+									{
+										displayName: 'Processed Parameters',
+										name: 'processedParams',
+										type: 'json',
+										default: '{"1": "parameter_value"}',
+										description: 'Template parameters as JSON object with parameter positions as keys',
+										placeholder: '{"1": "Chatwoot", "2": "Support Team"}',
+									},
+								],
+							},
+						],
+					},
+				],
 			},
 			// Message fields
 			{
@@ -668,8 +814,71 @@ export class Chatwoot implements INodeType {
 						resource: ['message'],
 						operation: ['create'],
 						messageType: ['text'],
+						sendMode: ['fields'],
 					},
 				},
+			},
+			{
+				displayName: 'WhatsApp Template Parameters',
+				name: 'templateParams',
+				type: 'fixedCollection',
+				typeOptions: {
+					multipleValues: false,
+				},
+				description: 'Template parameters for WhatsApp messages',
+				default: {},
+				displayOptions: {
+					show: {
+						resource: ['message'],
+						operation: ['create'],
+						messageType: ['text'],
+						sendMode: ['fields'],
+					},
+				},
+				options: [
+					{
+						name: 'template',
+						displayName: 'Template',
+						values: [
+							{
+								displayName: 'Template Name',
+								name: 'name',
+								type: 'string',
+								default: '',
+								description: 'Name of the WhatsApp template',
+								placeholder: 'sample_issue_resolution',
+							},
+							{
+								displayName: 'Category',
+								name: 'category',
+								type: 'options',
+								options: [
+									{ name: 'UTILITY', value: 'UTILITY' },
+									{ name: 'MARKETING', value: 'MARKETING' },
+									{ name: 'AUTHENTICATION', value: 'AUTHENTICATION' },
+								],
+								default: 'UTILITY',
+								description: 'Category of the template',
+							},
+							{
+								displayName: 'Language',
+								name: 'language',
+								type: 'string',
+								default: 'en_US',
+								description: 'Language code for the template',
+								placeholder: 'en_US',
+							},
+							{
+								displayName: 'Processed Parameters',
+								name: 'processedParams',
+								type: 'json',
+								default: '{"1": "parameter_value"}',
+								description: 'Template parameters as JSON object with parameter positions as keys',
+								placeholder: '{"1": "Chatwoot", "2": "Support Team"}',
+							},
+						],
+					},
+				],
 			},
 			{
 				displayName: 'Message Type',
@@ -721,7 +930,19 @@ export class Chatwoot implements INodeType {
 				displayName: 'Custom JSON',
 				name: 'customJson',
 				type: 'json',
-				default: '{\n  "content": "Hello! How can I help you?",\n  "message_type": "outgoing",\n  "private": false\n}',
+				default: `{
+  "content": "Hello! How can I help you?",
+  "message_type": "outgoing",
+  "private": false,
+  "template_params": {
+    "name": "sample_issue_resolution",
+    "category": "UTILITY",
+    "language": "en_US",
+    "processed_params": {
+      "1": "Chatwoot"
+    }
+  }
+}`,
 				description: 'Custom JSON payload to send with the request. This will override all structured fields.',
 				displayOptions: {
 					show: {
@@ -1884,25 +2105,79 @@ export class Chatwoot implements INodeType {
 					} else if (operation === 'create') {
 						const credentials = await this.getCredentials('chatwootApi');
 						const accountId = credentials.accountId as number;
-						const sourceId = this.getNodeParameter('sourceId', itemIndex) as string;
-						const inboxId = this.getNodeParameter('inboxId', itemIndex) as number;
-						const contactId = this.getNodeParameter('contactId', itemIndex, '') as string;
-						const assigneeId = this.getNodeParameter('assigneeId', itemIndex, '') as string;
-						const teamId = this.getNodeParameter('teamId', itemIndex, '') as string;
-						const initialMessage = this.getNodeParameter('initialMessage', itemIndex, '') as string;
+						const sendMode = this.getNodeParameter('sendMode', itemIndex, 'fields') as string;
 
-						const body: any = {
-							source_id: sourceId,
-							inbox_id: inboxId,
-						};
+						let body: any;
 
-						if (contactId) body.contact_id = contactId;
-						if (assigneeId) body.assignee_id = assigneeId;
-						if (teamId) body.team_id = teamId;
-						if (initialMessage) {
-							body.message = {
-								content: initialMessage,
+						if (sendMode === 'json') {
+							// Use custom JSON
+							const customJson = this.getNodeParameter('customJson', itemIndex) as string;
+							try {
+								body = JSON.parse(customJson);
+							} catch (error) {
+								throw new NodeOperationError(this.getNode(), `Invalid JSON in Custom JSON field: ${error.message}`);
+							}
+						} else {
+							// Use structured fields
+							const sourceId = this.getNodeParameter('sourceId', itemIndex) as string;
+							const inboxId = this.getNodeParameter('inboxId', itemIndex) as number;
+							const initialMessage = this.getNodeParameter('initialMessage', itemIndex) as string;
+							const additionalOptions = this.getNodeParameter('additionalOptions', itemIndex, {}) as any;
+
+							body = {
+								source_id: sourceId,
+								inbox_id: inboxId,
 							};
+
+							// Add initial message
+							if (initialMessage) {
+								body.message = {
+									content: initialMessage,
+								};
+
+								// Add template parameters if specified
+								if (additionalOptions.templateParams && additionalOptions.templateParams.template) {
+									const template = additionalOptions.templateParams.template;
+									body.message.template_params = {
+										name: template.name,
+										category: template.category,
+										language: template.language,
+									};
+
+									if (template.processedParams) {
+										try {
+											body.message.template_params.processed_params = JSON.parse(template.processedParams);
+										} catch (error) {
+											throw new NodeOperationError(this.getNode(), `Invalid JSON in Template Processed Parameters: ${error.message}`);
+										}
+									}
+								}
+							}
+
+							// Add optional fields from additional options
+							if (additionalOptions.contactId) body.contact_id = additionalOptions.contactId;
+							if (additionalOptions.assigneeId) body.assignee_id = additionalOptions.assigneeId;
+							if (additionalOptions.teamId) body.team_id = additionalOptions.teamId;
+							if (additionalOptions.status) body.status = additionalOptions.status;
+							if (additionalOptions.snoozedUntil) body.snoozed_until = additionalOptions.snoozedUntil;
+
+							// Parse and add additional attributes
+							if (additionalOptions.additionalAttributes) {
+								try {
+									body.additional_attributes = JSON.parse(additionalOptions.additionalAttributes);
+								} catch (error) {
+									throw new NodeOperationError(this.getNode(), `Invalid JSON in Additional Attributes: ${error.message}`);
+								}
+							}
+
+							// Parse and add custom attributes
+							if (additionalOptions.customAttributes) {
+								try {
+									body.custom_attributes = JSON.parse(additionalOptions.customAttributes);
+								} catch (error) {
+									throw new NodeOperationError(this.getNode(), `Invalid JSON in Custom Attributes: ${error.message}`);
+								}
+							}
 						}
 
 						const url = `/api/v1/accounts/${accountId}/conversations`;
@@ -2145,7 +2420,27 @@ export class Chatwoot implements INodeType {
 							if (messageType === 'text') {
 								// Regular text message
 								const content = this.getNodeParameter('content', itemIndex) as string;
+								const templateParams = this.getNodeParameter('templateParams', itemIndex, {}) as any;
+
 								body.content = content;
+
+								// Add template parameters if specified
+								if (templateParams && templateParams.template) {
+									const template = templateParams.template;
+									body.template_params = {
+										name: template.name,
+										category: template.category,
+										language: template.language,
+									};
+
+									if (template.processedParams) {
+										try {
+											body.template_params.processed_params = JSON.parse(template.processedParams);
+										} catch (error) {
+											throw new NodeOperationError(this.getNode(), `Invalid JSON in Template Processed Parameters: ${error.message}`);
+										}
+									}
+								}
 							} else if (messageType === 'input_select') {
 								// Interactive Options
 								const interactiveContent = this.getNodeParameter('interactiveContent', itemIndex) as string;
