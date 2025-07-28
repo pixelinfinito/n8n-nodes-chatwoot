@@ -428,7 +428,7 @@ export class Chatwoot implements INodeType {
 				displayName: 'Custom JSON',
 				name: 'customJson',
 				type: 'json',
-				default: '{\n  "name": "John Doe",\n  "email": "john@example.com",\n  "phone_number": "+1234567890"\n}',
+				default: '{\n  "name": "John Doe",\n  "email": "john@example.com",\n  "phone_number": "+1234567890",\n  "inbox_id": 1\n}',
 				description: 'Custom JSON payload to send with the request. This will override all structured fields.',
 				displayOptions: {
 					show: {
@@ -498,6 +498,14 @@ export class Chatwoot implements INodeType {
 						default: '',
 						description: 'A unique identifier for the contact from an external system',
 						placeholder: 'unique_id_123',
+					},
+					{
+						displayName: 'Inbox ID',
+						name: 'inboxId',
+						type: 'number',
+						default: '',
+						description: 'ID of the inbox to associate with the contact',
+						placeholder: '1',
 					},
 					{
 						displayName: 'Name',
@@ -1533,14 +1541,14 @@ export class Chatwoot implements INodeType {
 						name: 'sort',
 						type: 'options',
 						options: [
-							{ name: 'Name (A-Z)', value: 'name' },
-							{ name: 'Name (Z-A)', value: '-name' },
 							{ name: 'Email (A-Z)', value: 'email' },
 							{ name: 'Email (Z-A)', value: '-email' },
-							{ name: 'Phone Number (A-Z)', value: 'phone_number' },
-							{ name: 'Phone Number (Z-A)', value: '-phone_number' },
 							{ name: 'Last Activity (Newest)', value: '-last_activity_at' },
 							{ name: 'Last Activity (Oldest)', value: 'last_activity_at' },
+							{ name: 'Name (A-Z)', value: 'name' },
+							{ name: 'Name (Z-A)', value: '-name' },
+							{ name: 'Phone Number (A-Z)', value: 'phone_number' },
+							{ name: 'Phone Number (Z-A)', value: '-phone_number' },
 						],
 						default: 'name',
 						description: 'Attribute to sort the results by',
@@ -1582,14 +1590,14 @@ export class Chatwoot implements INodeType {
 						placeholder: '1',
 					},
 					{
-						displayName: 'Labels',
+						displayName: 'Label Names or IDs',
 						name: 'labels',
 						type: 'multiOptions',
 						typeOptions: {
 							loadOptionsMethod: 'getLabels',
 						},
 						default: [],
-						description: 'Filter by one or more labels',
+						description: 'Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
 					},
 					{
 						displayName: 'Page',
@@ -1677,14 +1685,14 @@ export class Chatwoot implements INodeType {
 						name: 'sort',
 						type: 'options',
 						options: [
-							{ name: 'Name (A-Z)', value: 'name' },
-							{ name: 'Name (Z-A)', value: '-name' },
 							{ name: 'Email (A-Z)', value: 'email' },
 							{ name: 'Email (Z-A)', value: '-email' },
-							{ name: 'Phone Number (A-Z)', value: 'phone_number' },
-							{ name: 'Phone Number (Z-A)', value: '-phone_number' },
 							{ name: 'Last Activity (Newest)', value: '-last_activity_at' },
 							{ name: 'Last Activity (Oldest)', value: 'last_activity_at' },
+							{ name: 'Name (A-Z)', value: 'name' },
+							{ name: 'Name (Z-A)', value: '-name' },
+							{ name: 'Phone Number (A-Z)', value: 'phone_number' },
+							{ name: 'Phone Number (Z-A)', value: '-phone_number' },
 						],
 						default: 'name',
 						description: 'Attribute to sort the results by',
@@ -1803,6 +1811,14 @@ export class Chatwoot implements INodeType {
 						default: '',
 						description: 'A unique identifier for the contact from an external system',
 						placeholder: 'unique_id_123',
+					},
+					{
+						displayName: 'Inbox ID',
+						name: 'inboxId',
+						type: 'number',
+						default: '',
+						description: 'ID of the inbox to associate with the contact',
+						placeholder: '1',
 					},
 					{
 						displayName: 'Name',
@@ -2119,6 +2135,7 @@ export class Chatwoot implements INodeType {
 							if (additionalOptions.identifier) body.identifier = additionalOptions.identifier;
 							if (additionalOptions.blocked !== undefined) body.blocked = additionalOptions.blocked;
 							if (additionalOptions.avatarUrl) body.avatar_url = additionalOptions.avatarUrl;
+							if (additionalOptions.inboxId) body.inbox_id = additionalOptions.inboxId;
 
 							// Parse and add additional attributes
 							if (additionalOptions.additionalAttributes) {
@@ -2196,6 +2213,7 @@ export class Chatwoot implements INodeType {
 							if (additionalOptions.identifier) body.identifier = additionalOptions.identifier;
 							if (additionalOptions.blocked !== undefined) body.blocked = additionalOptions.blocked;
 							if (additionalOptions.avatarUrl) body.avatar_url = additionalOptions.avatarUrl;
+							if (additionalOptions.inboxId) body.inbox_id = additionalOptions.inboxId;
 
 							// Parse and add additional attributes
 							if (additionalOptions.additionalAttributes) {
