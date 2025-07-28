@@ -439,13 +439,11 @@ export class Chatwoot implements INodeType {
 				},
 			},
 			{
-				displayName: 'Name',
-				name: 'name',
-				type: 'string',
-				default: '',
-				required: true,
-				description: 'The name of the contact',
-				placeholder: 'John Doe',
+				displayName: 'Additional Options',
+				name: 'additionalOptions',
+				type: 'collection',
+				placeholder: 'Add Option',
+				default: {},
 				displayOptions: {
 					show: {
 						resource: ['contact'],
@@ -453,51 +451,71 @@ export class Chatwoot implements INodeType {
 						sendMode: ['fields'],
 					},
 				},
-			},
-			{
-				displayName: 'Email',
-				name: 'email',
-				type: 'string',
-				default: '',
-				description: 'The email address of the contact',
-				placeholder: 'john@example.com',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['create'],
-						sendMode: ['fields'],
+				options: [
+					{
+						displayName: 'Additional Attributes',
+						name: 'additionalAttributes',
+						type: 'json',
+						default: '{}',
+						description: 'Key-value pairs for additional contact attributes (JSON format)',
+						placeholder: '{"city": "San Francisco", "country": "United States"}',
 					},
-				},
-			},
-			{
-				displayName: 'Phone Number',
-				name: 'phoneNumber',
-				type: 'string',
-				default: '',
-				description: 'The phone number of the contact',
-				placeholder: '+1234567890',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['create'],
-						sendMode: ['fields'],
+					{
+						displayName: 'Avatar URL',
+						name: 'avatarUrl',
+						type: 'string',
+						default: '',
+						description: 'URL to a JPG or PNG avatar image',
+						placeholder: 'https://example.com/avatar.jpg',
 					},
-				},
-			},
-			{
-				displayName: 'Identifier',
-				name: 'identifier',
-				type: 'string',
-				default: '',
-				description: 'A unique identifier for the contact',
-				placeholder: 'unique_id_123',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['create'],
-						sendMode: ['fields'],
+					{
+						displayName: 'Blocked',
+						name: 'blocked',
+						type: 'boolean',
+						default: false,
+						description: 'Whether the contact is blocked',
 					},
-				},
+					{
+						displayName: 'Custom Attributes',
+						name: 'customAttributes',
+						type: 'json',
+						default: '{}',
+						description: 'Key-value pairs for predefined custom attributes (JSON format)',
+						placeholder: '{"user_type": "premium", "subscription": "active"}',
+					},
+					{
+						displayName: 'Email',
+						name: 'email',
+						type: 'string',
+						default: '',
+						description: 'The email address of the contact',
+						placeholder: 'john@example.com',
+					},
+					{
+						displayName: 'Identifier',
+						name: 'identifier',
+						type: 'string',
+						default: '',
+						description: 'A unique identifier for the contact from an external system',
+						placeholder: 'unique_id_123',
+					},
+					{
+						displayName: 'Name',
+						name: 'name',
+						type: 'string',
+						default: '',
+						description: 'The name of the contact',
+						placeholder: 'John Doe',
+					},
+					{
+						displayName: 'Phone Number',
+						name: 'phoneNumber',
+						type: 'string',
+						default: '',
+						description: 'The phone number of the contact',
+						placeholder: '+1234567890',
+					},
+				],
 			},
 			// Conversation fields
 			{
@@ -636,12 +654,12 @@ export class Chatwoot implements INodeType {
 				},
 				options: [
 					{
-						displayName: 'Contact ID',
-						name: 'contactId',
-						type: 'number',
-						default: '',
-						description: 'The ID of an existing contact',
-						placeholder: '1',
+						displayName: 'Additional Attributes',
+						name: 'additionalAttributes',
+						type: 'json',
+						default: '{}',
+						description: 'Additional attributes like browser information (JSON format)',
+						placeholder: '{"browser": "Chrome", "browser_version": "89.0.4389.82"}',
 					},
 					{
 						displayName: 'Assignee ID',
@@ -652,12 +670,27 @@ export class Chatwoot implements INodeType {
 						placeholder: '1',
 					},
 					{
-						displayName: 'Team ID',
-						name: 'teamId',
+						displayName: 'Contact ID',
+						name: 'contactId',
 						type: 'number',
 						default: '',
-						description: 'ID of the team to assign the conversation to',
+						description: 'The ID of an existing contact',
 						placeholder: '1',
+					},
+					{
+						displayName: 'Custom Attributes',
+						name: 'customAttributes',
+						type: 'json',
+						default: '{}',
+						description: 'Custom attributes for the conversation (JSON format)',
+						placeholder: '{"attribute_key": "attribute_value", "priority": 3}',
+					},
+					{
+						displayName: 'Snoozed Until',
+						name: 'snoozedUntil',
+						type: 'dateTime',
+						default: '',
+						description: 'Snoozed until date time',
 					},
 					{
 						displayName: 'Status',
@@ -672,27 +705,12 @@ export class Chatwoot implements INodeType {
 						description: 'Status of the conversation',
 					},
 					{
-						displayName: 'Snoozed Until',
-						name: 'snoozedUntil',
-						type: 'dateTime',
+						displayName: 'Team ID',
+						name: 'teamId',
+						type: 'number',
 						default: '',
-						description: 'Snoozed until date time',
-					},
-					{
-						displayName: 'Additional Attributes',
-						name: 'additionalAttributes',
-						type: 'json',
-						default: '{}',
-						description: 'Additional attributes like browser information (JSON format)',
-						placeholder: '{"browser": "Chrome", "browser_version": "89.0.4389.82"}',
-					},
-					{
-						displayName: 'Custom Attributes',
-						name: 'customAttributes',
-						type: 'json',
-						default: '{}',
-						description: 'Custom attributes for the conversation (JSON format)',
-						placeholder: '{"attribute_key": "attribute_value", "priority": 3}',
+						description: 'ID of the team to assign the conversation to',
+						placeholder: '1',
 					},
 					{
 						displayName: 'WhatsApp Template Parameters',
@@ -709,21 +727,13 @@ export class Chatwoot implements INodeType {
 								displayName: 'Template',
 								values: [
 									{
-										displayName: 'Template Name',
-										name: 'name',
-										type: 'string',
-										default: '',
-										description: 'Name of the WhatsApp template',
-										placeholder: 'sample_issue_resolution',
-									},
-									{
 										displayName: 'Category',
 										name: 'category',
 										type: 'options',
 										options: [
-											{ name: 'UTILITY', value: 'UTILITY' },
-											{ name: 'MARKETING', value: 'MARKETING' },
 											{ name: 'AUTHENTICATION', value: 'AUTHENTICATION' },
+											{ name: 'MARKETING', value: 'MARKETING' },
+											{ name: 'UTILITY', value: 'UTILITY' },
 										],
 										default: 'UTILITY',
 										description: 'Category of the template',
@@ -743,6 +753,14 @@ export class Chatwoot implements INodeType {
 										default: '{"1": "parameter_value"}',
 										description: 'Template parameters as JSON object with parameter positions as keys',
 										placeholder: '{"1": "Chatwoot", "2": "Support Team"}',
+									},
+									{
+										displayName: 'Template Name',
+										name: 'name',
+										type: 'string',
+										default: '',
+										description: 'Name of the WhatsApp template',
+										placeholder: 'sample_issue_resolution',
 									},
 								],
 							},
@@ -819,13 +837,10 @@ export class Chatwoot implements INodeType {
 				},
 			},
 			{
-				displayName: 'WhatsApp Template Parameters',
-				name: 'templateParams',
-				type: 'fixedCollection',
-				typeOptions: {
-					multipleValues: false,
-				},
-				description: 'Template parameters for WhatsApp messages',
+				displayName: 'Additional Options',
+				name: 'additionalOptions',
+				type: 'collection',
+				placeholder: 'Add Option',
 				default: {},
 				displayOptions: {
 					show: {
@@ -837,44 +852,63 @@ export class Chatwoot implements INodeType {
 				},
 				options: [
 					{
-						name: 'template',
-						displayName: 'Template',
-						values: [
+						displayName: 'Private Message',
+						name: 'private',
+						type: 'boolean',
+						default: false,
+						description: 'Whether this is a private message (internal note)',
+					},
+					{
+						displayName: 'WhatsApp Template Parameters',
+						name: 'templateParams',
+						type: 'fixedCollection',
+						typeOptions: {
+							multipleValues: false,
+						},
+						description: 'Template parameters for WhatsApp messages',
+						default: {},
+						options: [
 							{
-								displayName: 'Template Name',
-								name: 'name',
-								type: 'string',
-								default: '',
-								description: 'Name of the WhatsApp template',
-								placeholder: 'sample_issue_resolution',
-							},
-							{
-								displayName: 'Category',
-								name: 'category',
-								type: 'options',
-								options: [
-									{ name: 'UTILITY', value: 'UTILITY' },
-									{ name: 'MARKETING', value: 'MARKETING' },
-									{ name: 'AUTHENTICATION', value: 'AUTHENTICATION' },
+								name: 'template',
+								displayName: 'Template',
+								values: [
+									{
+										displayName: 'Category',
+										name: 'category',
+										type: 'options',
+										options: [
+											{ name: 'AUTHENTICATION', value: 'AUTHENTICATION' },
+											{ name: 'MARKETING', value: 'MARKETING' },
+											{ name: 'UTILITY', value: 'UTILITY' },
+										],
+										default: 'UTILITY',
+										description: 'Category of the template',
+									},
+									{
+										displayName: 'Language',
+										name: 'language',
+										type: 'string',
+										default: 'en_US',
+										description: 'Language code for the template',
+										placeholder: 'en_US',
+									},
+									{
+										displayName: 'Processed Parameters',
+										name: 'processedParams',
+										type: 'json',
+										default: '{"1": "parameter_value"}',
+										description: 'Template parameters as JSON object with parameter positions as keys',
+										placeholder: '{"1": "Chatwoot", "2": "Support Team"}',
+									},
+									{
+										displayName: 'Template Name',
+										name: 'name',
+										type: 'string',
+										default: '',
+										description: 'Name of the WhatsApp template',
+										placeholder: 'sample_issue_resolution',
+									},
 								],
-								default: 'UTILITY',
-								description: 'Category of the template',
-							},
-							{
-								displayName: 'Language',
-								name: 'language',
-								type: 'string',
-								default: 'en_US',
-								description: 'Language code for the template',
-								placeholder: 'en_US',
-							},
-							{
-								displayName: 'Processed Parameters',
-								name: 'processedParams',
-								type: 'json',
-								default: '{"1": "parameter_value"}',
-								description: 'Template parameters as JSON object with parameter positions as keys',
-								placeholder: '{"1": "Chatwoot", "2": "Support Team"}',
 							},
 						],
 					},
@@ -885,11 +919,11 @@ export class Chatwoot implements INodeType {
 				name: 'messageType',
 				type: 'options',
 				options: [
-					{ name: 'Text Message', value: 'text' },
-					{ name: 'Interactive Options', value: 'input_select' },
-					{ name: 'Interactive Form', value: 'form' },
-					{ name: 'Interactive Cards', value: 'cards' },
 					{ name: 'Interactive Articles', value: 'article' },
+					{ name: 'Interactive Cards', value: 'cards' },
+					{ name: 'Interactive Form', value: 'form' },
+					{ name: 'Interactive Options', value: 'input_select' },
+					{ name: 'Text Message', value: 'text' },
 				],
 				default: 'text',
 				description: 'Type of message to send',
@@ -1050,6 +1084,13 @@ export class Chatwoot implements INodeType {
 						displayName: 'Form Field',
 						values: [
 							{
+								displayName: 'Default Value',
+								name: 'default',
+								type: 'string',
+								default: '',
+								description: 'Default value for the field',
+							},
+							{
 								displayName: 'Field Name',
 								name: 'name',
 								type: 'string',
@@ -1085,13 +1126,6 @@ export class Chatwoot implements INodeType {
 								default: '',
 								description: 'Placeholder text for the field',
 								placeholder: 'Enter your email',
-							},
-							{
-								displayName: 'Default Value',
-								name: 'default',
-								type: 'string',
-								default: '',
-								description: 'Default value for the field',
 							},
 							{
 								displayName: 'Select Options',
@@ -1471,6 +1505,134 @@ export class Chatwoot implements INodeType {
 					},
 				},
 			},
+			{
+				displayName: 'Additional Options',
+				name: 'additionalOptions',
+				type: 'collection',
+				placeholder: 'Add Option',
+				default: {},
+				displayOptions: {
+					show: {
+						resource: ['contact'],
+						operation: ['getAll'],
+					},
+				},
+				options: [
+					{
+						displayName: 'Page',
+						name: 'page',
+						type: 'number',
+						default: 1,
+						description: 'The page number for pagination',
+						typeOptions: {
+							minValue: 1,
+						},
+					},
+					{
+						displayName: 'Sort',
+						name: 'sort',
+						type: 'options',
+						options: [
+							{ name: 'Name (A-Z)', value: 'name' },
+							{ name: 'Name (Z-A)', value: '-name' },
+							{ name: 'Email (A-Z)', value: 'email' },
+							{ name: 'Email (Z-A)', value: '-email' },
+							{ name: 'Phone Number (A-Z)', value: 'phone_number' },
+							{ name: 'Phone Number (Z-A)', value: '-phone_number' },
+							{ name: 'Last Activity (Newest)', value: '-last_activity_at' },
+							{ name: 'Last Activity (Oldest)', value: 'last_activity_at' },
+						],
+						default: 'name',
+						description: 'Attribute to sort the results by',
+					},
+				],
+			},
+			{
+				displayName: 'Additional Options',
+				name: 'additionalOptions',
+				type: 'collection',
+				placeholder: 'Add Option',
+				default: {},
+				displayOptions: {
+					show: {
+						resource: ['conversation'],
+						operation: ['getAll'],
+					},
+				},
+				options: [
+					{
+						displayName: 'Assignee Type',
+						name: 'assigneeType',
+						type: 'options',
+						options: [
+							{ name: 'All', value: 'all' },
+							{ name: 'Assigned', value: 'assigned' },
+							{ name: 'Me', value: 'me' },
+							{ name: 'Unassigned', value: 'unassigned' },
+						],
+						default: 'all',
+						description: 'Filter by assignee type',
+					},
+					{
+						displayName: 'Inbox ID',
+						name: 'inboxId',
+						type: 'number',
+						default: '',
+						description: 'Filter by a specific inbox ID',
+						placeholder: '1',
+					},
+					{
+						displayName: 'Labels',
+						name: 'labels',
+						type: 'multiOptions',
+						typeOptions: {
+							loadOptionsMethod: 'getLabels',
+						},
+						default: [],
+						description: 'Filter by one or more labels',
+					},
+					{
+						displayName: 'Page',
+						name: 'page',
+						type: 'number',
+						default: 1,
+						description: 'The page number for pagination',
+						typeOptions: {
+							minValue: 1,
+						},
+					},
+					{
+						displayName: 'Search Query',
+						name: 'q',
+						type: 'string',
+						default: '',
+						description: 'Search term to find in message content',
+						placeholder: 'search term',
+					},
+					{
+						displayName: 'Status',
+						name: 'status',
+						type: 'options',
+						options: [
+							{ name: 'All', value: 'all' },
+							{ name: 'Open', value: 'open' },
+							{ name: 'Pending', value: 'pending' },
+							{ name: 'Resolved', value: 'resolved' },
+							{ name: 'Snoozed', value: 'snoozed' },
+						],
+						default: 'open',
+						description: 'Filter by conversation status',
+					},
+					{
+						displayName: 'Team ID',
+						name: 'teamId',
+						type: 'number',
+						default: '',
+						description: 'Filter by a specific team ID',
+						placeholder: '1',
+					},
+				],
+			},
 			// Contact search field
 			{
 				displayName: 'Search Query',
@@ -1486,6 +1648,48 @@ export class Chatwoot implements INodeType {
 						operation: ['search'],
 					},
 				},
+			},
+			{
+				displayName: 'Additional Options',
+				name: 'additionalOptions',
+				type: 'collection',
+				placeholder: 'Add Option',
+				default: {},
+				displayOptions: {
+					show: {
+						resource: ['contact'],
+						operation: ['search'],
+					},
+				},
+				options: [
+					{
+						displayName: 'Page',
+						name: 'page',
+						type: 'number',
+						default: 1,
+						description: 'The page number for pagination',
+						typeOptions: {
+							minValue: 1,
+						},
+					},
+					{
+						displayName: 'Sort',
+						name: 'sort',
+						type: 'options',
+						options: [
+							{ name: 'Name (A-Z)', value: 'name' },
+							{ name: 'Name (Z-A)', value: '-name' },
+							{ name: 'Email (A-Z)', value: 'email' },
+							{ name: 'Email (Z-A)', value: '-email' },
+							{ name: 'Phone Number (A-Z)', value: 'phone_number' },
+							{ name: 'Phone Number (Z-A)', value: '-phone_number' },
+							{ name: 'Last Activity (Newest)', value: '-last_activity_at' },
+							{ name: 'Last Activity (Oldest)', value: 'last_activity_at' },
+						],
+						default: 'name',
+						description: 'Attribute to sort the results by',
+					},
+				],
 			},
 			// Conversation status field
 			{
@@ -1540,60 +1744,83 @@ export class Chatwoot implements INodeType {
 			},
 			// Update fields for contact
 			{
-				displayName: 'Name',
-				name: 'name',
-				type: 'string',
-				default: '',
-				description: 'The name of the contact',
-				placeholder: 'John Doe',
+				displayName: 'Fields to Update',
+				name: 'additionalOptions',
+				type: 'collection',
+				placeholder: 'Add Field',
+				default: {},
 				displayOptions: {
 					show: {
 						resource: ['contact'],
 						operation: ['update'],
+						sendMode: ['fields'],
 					},
 				},
-			},
-			{
-				displayName: 'Email',
-				name: 'email',
-				type: 'string',
-				default: '',
-				description: 'The email address of the contact',
-				placeholder: 'john@example.com',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['update'],
+				options: [
+					{
+						displayName: 'Additional Attributes',
+						name: 'additionalAttributes',
+						type: 'json',
+						default: '{}',
+						description: 'Key-value pairs for additional contact attributes (JSON format)',
+						placeholder: '{"city": "San Francisco", "country": "United States"}',
 					},
-				},
-			},
-			{
-				displayName: 'Phone Number',
-				name: 'phoneNumber',
-				type: 'string',
-				default: '',
-				description: 'The phone number of the contact',
-				placeholder: '+1234567890',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['update'],
+					{
+						displayName: 'Avatar URL',
+						name: 'avatarUrl',
+						type: 'string',
+						default: '',
+						description: 'URL to a JPG or PNG avatar image',
+						placeholder: 'https://example.com/avatar.jpg',
 					},
-				},
-			},
-			{
-				displayName: 'Identifier',
-				name: 'identifier',
-				type: 'string',
-				default: '',
-				description: 'A unique identifier for the contact',
-				placeholder: 'unique_id_123',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['update'],
+					{
+						displayName: 'Blocked',
+						name: 'blocked',
+						type: 'boolean',
+						default: false,
+						description: 'Whether the contact is blocked',
 					},
-				},
+					{
+						displayName: 'Custom Attributes',
+						name: 'customAttributes',
+						type: 'json',
+						default: '{}',
+						description: 'Key-value pairs for predefined custom attributes (JSON format)',
+						placeholder: '{"user_type": "premium", "subscription": "active"}',
+					},
+					{
+						displayName: 'Email',
+						name: 'email',
+						type: 'string',
+						default: '',
+						description: 'The email address of the contact',
+						placeholder: 'john@example.com',
+					},
+					{
+						displayName: 'Identifier',
+						name: 'identifier',
+						type: 'string',
+						default: '',
+						description: 'A unique identifier for the contact from an external system',
+						placeholder: 'unique_id_123',
+					},
+					{
+						displayName: 'Name',
+						name: 'name',
+						type: 'string',
+						default: '',
+						description: 'The name of the contact',
+						placeholder: 'John Doe',
+					},
+					{
+						displayName: 'Phone Number',
+						name: 'phoneNumber',
+						type: 'string',
+						default: '',
+						description: 'The phone number of the contact',
+						placeholder: '+1234567890',
+					},
+				],
 			},
 			// Update fields for canned response
 			{
@@ -1668,14 +1895,14 @@ export class Chatwoot implements INodeType {
 				name: 'continueOnFail',
 				type: 'boolean',
 				default: false,
-				description: 'Do not stop if this operation fails',
+				description: 'Whether to continue if this operation fails',
 			},
 			{
 				displayName: 'Debug Logging',
 				name: 'debugLogging',
 				type: 'boolean',
 				default: false,
-				description: 'Show request details in console',
+				description: 'Whether to show request details in console',
 			},
 		],
 	};
@@ -1829,7 +2056,14 @@ export class Chatwoot implements INodeType {
 					} else if (operation === 'getAll') {
 						const credentials = await this.getCredentials('chatwootApi');
 						const accountId = credentials.accountId as number;
+						const additionalOptions = this.getNodeParameter('additionalOptions', itemIndex, {}) as any;
 						const url = `/api/v1/accounts/${accountId}/contacts`;
+
+						const qs: any = {};
+
+						// Add optional query parameters
+						if (additionalOptions.sort) qs.sort = additionalOptions.sort;
+						if (additionalOptions.page) qs.page = additionalOptions.page;
 
 						// Construct the base URL properly
 						const baseUrlExpression = (credentials.baseUrl as string).replace(/\/$/, "");
@@ -1841,6 +2075,7 @@ export class Chatwoot implements INodeType {
 							console.log(`[Chatwoot Debug] Account ID: ${accountId}`);
 							console.log(`[Chatwoot Debug] Constructed URL path: ${url}`);
 							console.log(`[Chatwoot Debug] Full URL would be: ${credentials.baseUrl}${url}`);
+							console.log(`[Chatwoot Debug] Query parameters: ${JSON.stringify(qs)}`);
 							console.log(`[Chatwoot Debug] Final constructed URL: ${fullUrl}`);
 							console.log(`[Chatwoot Debug] Making request to: ${fullUrl}`);
 						}
@@ -1848,6 +2083,7 @@ export class Chatwoot implements INodeType {
 						const response = await this.helpers.httpRequest({
 							method: 'GET',
 							url: fullUrl,
+							qs,
 							headers: {
 								'api_access_token': credentials.accessToken as string,
 								'Accept': 'application/json',
@@ -1872,18 +2108,35 @@ export class Chatwoot implements INodeType {
 							}
 						} else {
 							// Use structured fields
-							const name = this.getNodeParameter('name', itemIndex) as string;
-							const email = this.getNodeParameter('email', itemIndex, '') as string;
-							const phoneNumber = this.getNodeParameter('phoneNumber', itemIndex, '') as string;
-							const identifier = this.getNodeParameter('identifier', itemIndex, '') as string;
+							const additionalOptions = this.getNodeParameter('additionalOptions', itemIndex, {}) as any;
 
-							body = {
-								name,
-							};
+							body = {};
 
-							if (email) body.email = email;
-							if (phoneNumber) body.phone_number = phoneNumber;
-							if (identifier) body.identifier = identifier;
+							// Add fields from additional options
+							if (additionalOptions.name) body.name = additionalOptions.name;
+							if (additionalOptions.email) body.email = additionalOptions.email;
+							if (additionalOptions.phoneNumber) body.phone_number = additionalOptions.phoneNumber;
+							if (additionalOptions.identifier) body.identifier = additionalOptions.identifier;
+							if (additionalOptions.blocked !== undefined) body.blocked = additionalOptions.blocked;
+							if (additionalOptions.avatarUrl) body.avatar_url = additionalOptions.avatarUrl;
+
+							// Parse and add additional attributes
+							if (additionalOptions.additionalAttributes) {
+								try {
+									body.additional_attributes = JSON.parse(additionalOptions.additionalAttributes);
+								} catch (error) {
+									throw new NodeOperationError(this.getNode(), `Invalid JSON in Additional Attributes: ${error.message}`);
+								}
+							}
+
+							// Parse and add custom attributes
+							if (additionalOptions.customAttributes) {
+								try {
+									body.custom_attributes = JSON.parse(additionalOptions.customAttributes);
+								} catch (error) {
+									throw new NodeOperationError(this.getNode(), `Invalid JSON in Custom Attributes: ${error.message}`);
+								}
+							}
 						}
 
 						const url = `/api/v1/accounts/${accountId}/contacts`;
@@ -1932,17 +2185,35 @@ export class Chatwoot implements INodeType {
 							}
 						} else {
 							// Use structured fields
-							const name = this.getNodeParameter('name', itemIndex, '') as string;
-							const email = this.getNodeParameter('email', itemIndex, '') as string;
-							const phoneNumber = this.getNodeParameter('phoneNumber', itemIndex, '') as string;
-							const identifier = this.getNodeParameter('identifier', itemIndex, '') as string;
+							const additionalOptions = this.getNodeParameter('additionalOptions', itemIndex, {}) as any;
 
 							body = {};
 
-							if (name) body.name = name;
-							if (email) body.email = email;
-							if (phoneNumber) body.phone_number = phoneNumber;
-							if (identifier) body.identifier = identifier;
+							// Add fields from additional options
+							if (additionalOptions.name) body.name = additionalOptions.name;
+							if (additionalOptions.email) body.email = additionalOptions.email;
+							if (additionalOptions.phoneNumber) body.phone_number = additionalOptions.phoneNumber;
+							if (additionalOptions.identifier) body.identifier = additionalOptions.identifier;
+							if (additionalOptions.blocked !== undefined) body.blocked = additionalOptions.blocked;
+							if (additionalOptions.avatarUrl) body.avatar_url = additionalOptions.avatarUrl;
+
+							// Parse and add additional attributes
+							if (additionalOptions.additionalAttributes) {
+								try {
+									body.additional_attributes = JSON.parse(additionalOptions.additionalAttributes);
+								} catch (error) {
+									throw new NodeOperationError(this.getNode(), `Invalid JSON in Additional Attributes: ${error.message}`);
+								}
+							}
+
+							// Parse and add custom attributes
+							if (additionalOptions.customAttributes) {
+								try {
+									body.custom_attributes = JSON.parse(additionalOptions.customAttributes);
+								} catch (error) {
+									throw new NodeOperationError(this.getNode(), `Invalid JSON in Custom Attributes: ${error.message}`);
+								}
+							}
 						}
 
 						const url = `/api/v1/accounts/${accountId}/contacts/${contactId}`;
@@ -2007,10 +2278,15 @@ export class Chatwoot implements INodeType {
 						const credentials = await this.getCredentials('chatwootApi');
 						const accountId = credentials.accountId as number;
 						const searchQuery = this.getNodeParameter('searchQuery', itemIndex) as string;
+						const additionalOptions = this.getNodeParameter('additionalOptions', itemIndex, {}) as any;
 
 						const qs: any = {
 							q: searchQuery,
 						};
+
+						// Add optional query parameters
+						if (additionalOptions.sort) qs.sort = additionalOptions.sort;
+						if (additionalOptions.page) qs.page = additionalOptions.page;
 
 						const url = `/api/v1/accounts/${accountId}/contacts/search`;
 
@@ -2076,7 +2352,21 @@ export class Chatwoot implements INodeType {
 					} else if (operation === 'getAll') {
 						const credentials = await this.getCredentials('chatwootApi');
 						const accountId = credentials.accountId as number;
+						const additionalOptions = this.getNodeParameter('additionalOptions', itemIndex, {}) as any;
 						const url = `/api/v1/accounts/${accountId}/conversations`;
+
+						const qs: any = {};
+
+						// Add optional query parameters
+						if (additionalOptions.assigneeType) qs.assignee_type = additionalOptions.assigneeType;
+						if (additionalOptions.status) qs.status = additionalOptions.status;
+						if (additionalOptions.q) qs.q = additionalOptions.q;
+						if (additionalOptions.inboxId) qs.inbox_id = additionalOptions.inboxId;
+						if (additionalOptions.teamId) qs.team_id = additionalOptions.teamId;
+						if (additionalOptions.labels && additionalOptions.labels.length > 0) {
+							qs['labels[]'] = additionalOptions.labels;
+						}
+						if (additionalOptions.page) qs.page = additionalOptions.page;
 
 						// Construct the base URL properly
 						const baseUrlExpression = (credentials.baseUrl as string).replace(/\/$/, "");
@@ -2088,6 +2378,7 @@ export class Chatwoot implements INodeType {
 							console.log(`[Chatwoot Debug] Account ID: ${accountId}`);
 							console.log(`[Chatwoot Debug] Constructed URL path: ${url}`);
 							console.log(`[Chatwoot Debug] Full URL would be: ${credentials.baseUrl}${url}`);
+							console.log(`[Chatwoot Debug] Query parameters: ${JSON.stringify(qs)}`);
 							console.log(`[Chatwoot Debug] Final constructed URL: ${fullUrl}`);
 							console.log(`[Chatwoot Debug] Making request to: ${fullUrl}`);
 						}
@@ -2095,6 +2386,7 @@ export class Chatwoot implements INodeType {
 						const response = await this.helpers.httpRequest({
 							method: 'GET',
 							url: fullUrl,
+							qs,
 							headers: {
 								'api_access_token': credentials.accessToken as string,
 								'Accept': 'application/json',
@@ -2417,16 +2709,21 @@ export class Chatwoot implements INodeType {
 								private: false,
 							};
 
-							if (messageType === 'text') {
+														if (messageType === 'text') {
 								// Regular text message
 								const content = this.getNodeParameter('content', itemIndex) as string;
-								const templateParams = this.getNodeParameter('templateParams', itemIndex, {}) as any;
+								const additionalOptions = this.getNodeParameter('additionalOptions', itemIndex, {}) as any;
 
 								body.content = content;
 
+								// Add private message setting
+								if (additionalOptions.private !== undefined) {
+									body.private = additionalOptions.private;
+								}
+
 								// Add template parameters if specified
-								if (templateParams && templateParams.template) {
-									const template = templateParams.template;
+								if (additionalOptions.templateParams && additionalOptions.templateParams.template) {
+									const template = additionalOptions.templateParams.template;
 									body.template_params = {
 										name: template.name,
 										category: template.category,
