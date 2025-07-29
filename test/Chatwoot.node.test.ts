@@ -229,6 +229,7 @@ describe('Chatwoot Node', () => {
 			const options = contactOperationProperty?.options || [];
 			const operationValues = options.map((option: any) => option.value);
 
+			expect(operationValues).toContain('addLabels');
 			expect(operationValues).toContain('get');
 			expect(operationValues).toContain('getAll');
 			expect(operationValues).toContain('create');

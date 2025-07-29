@@ -79,6 +79,12 @@ export class Chatwoot implements INodeType {
 				},
 				options: [
 					{
+						name: 'Add Labels',
+						value: 'addLabels',
+						description: 'Add labels to a contact',
+						action: 'Add labels to a contact',
+					},
+					{
 						name: 'Create',
 						value: 'create',
 						description: 'Create a new contact',
@@ -394,7 +400,7 @@ export class Chatwoot implements INodeType {
 				displayOptions: {
 					show: {
 						resource: ['contact'],
-						operation: ['get', 'update', 'delete'],
+						operation: ['get', 'update', 'delete', 'addLabels'],
 					},
 				},
 			},
@@ -1736,6 +1742,23 @@ export class Chatwoot implements INodeType {
 					},
 				},
 			},
+			// Contact labels field
+			{
+				displayName: 'Label Names or IDs',
+				name: 'labels',
+				type: 'multiOptions',
+				typeOptions: {
+					loadOptionsMethod: 'getLabels',
+				},
+				default: [],
+				description: 'Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
+				displayOptions: {
+					show: {
+						resource: ['contact'],
+						operation: ['addLabels'],
+					},
+				},
+			},
 			// Conversation custom attributes field
 			{
 				displayName: 'Custom Attributes',
@@ -2335,6 +2358,44 @@ export class Chatwoot implements INodeType {
 							},
 						});
 						responseData = response.payload.map((contact: any) => ({ json: contact }));
+					} else if (operation === 'addLabels') {
+						const credentials = await this.getCredentials('chatwootApi');
+						const accountId = credentials.accountId as number;
+						const contactId = this.getNodeParameter('contactId', itemIndex) as number;
+						const labels = this.getNodeParameter('labels', itemIndex, []) as string[];
+
+						const body = {
+							labels,
+						};
+
+						const url = `/api/v1/accounts/${accountId}/contacts/${contactId}/labels`;
+
+						// Construct the base URL properly
+						const baseUrlExpression = (credentials.baseUrl as string).replace(/\/$/, "");
+						const fullUrl = `${baseUrlExpression}${url}`;
+
+						if (debugLogging) {
+							console.log(`[Chatwoot Debug] Resource: ${resource}, Operation: ${operation}`);
+							console.log(`[Chatwoot Debug] Credentials baseUrl: ${credentials.baseUrl}`);
+							console.log(`[Chatwoot Debug] Account ID: ${accountId}, Contact ID: ${contactId}`);
+							console.log(`[Chatwoot Debug] Constructed URL path: ${url}`);
+							console.log(`[Chatwoot Debug] Full URL would be: ${credentials.baseUrl}${url}`);
+							console.log(`[Chatwoot Debug] Request body: ${JSON.stringify(body)}`);
+							console.log(`[Chatwoot Debug] Final constructed URL: ${fullUrl}`);
+							console.log(`[Chatwoot Debug] Making request to: ${fullUrl}`);
+						}
+
+						const response = await this.helpers.httpRequest({
+							method: 'POST',
+							url: fullUrl,
+							body,
+							headers: {
+								'api_access_token': credentials.accessToken as string,
+								'Accept': 'application/json',
+								'Content-Type': 'application/json',
+							},
+						});
+						responseData = { json: response };
 					}
 				} else if (resource === 'conversation') {
 					if (operation === 'get') {
