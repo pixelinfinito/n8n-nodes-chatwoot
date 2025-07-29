@@ -1744,14 +1744,12 @@ export class Chatwoot implements INodeType {
 			},
 			// Contact labels field
 			{
-				displayName: 'Label Names or IDs',
+				displayName: 'Labels',
 				name: 'labels',
-				type: 'multiOptions',
-				typeOptions: {
-					loadOptionsMethod: 'getLabels',
-				},
-				default: [],
-				description: 'Choose from the list, or specify IDs using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
+				type: 'string',
+				default: '',
+				description: 'Comma-separated list of label names (e.g., "support,billing,vip")',
+				placeholder: 'support,billing,vip',
 				displayOptions: {
 					show: {
 						resource: ['contact'],
@@ -2362,7 +2360,13 @@ export class Chatwoot implements INodeType {
 						const credentials = await this.getCredentials('chatwootApi');
 						const accountId = credentials.accountId as number;
 						const contactId = this.getNodeParameter('contactId', itemIndex) as number;
-						const labels = this.getNodeParameter('labels', itemIndex, []) as string[];
+						const labelsString = this.getNodeParameter('labels', itemIndex, '') as string;
+
+						// Convert comma-separated string to array and trim whitespace
+						const labels = labelsString
+							.split(',')
+							.map(label => label.trim())
+							.filter(label => label.length > 0);
 
 						const body = {
 							labels,
